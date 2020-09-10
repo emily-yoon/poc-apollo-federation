@@ -6,8 +6,8 @@
   "scripts": {
     "server": "concurrently -k npm:server:*",
     "server:rest": "json-server -q db.json",
-    "server:product": "node product.js",
-    "server:user": "node user.js",
+    "server:resource": "node resource.js",
+    "server:activity": "node activity.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

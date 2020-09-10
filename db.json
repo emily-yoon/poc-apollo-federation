@@ -1,42 +1,42 @@
 {
-    "products": [
+    "resources": [
       {
         "id": 1,
-        "title": "Product title 1"
+        "name": "Resource1"
       },
       {
         "id": 2,
-        "title": "Product title 2"
+        "name": "Resource2"
       },
       {
         "id": 3,
-        "title": "Product title 3"
+        "name": "Resource3"
       },
       {
         "id": 4,
-        "title": "Product title 4"
-      },
-      {
-        "id": 5,
-        "title": "Product title 5"
+        "name": "Resource4"
       }
     ],
-    "users": [
+    "activities": [
       {
         "id": 1,
-        "name": "Emily Yoon" 
+        "name": "Activity1",
+        "resourceId": 1
       },
       {
         "id": 2,
-        "name": "John Hatcher"
+        "name": "Activity2",
+        "resourceId": 2
       },
       {
         "id": 3,
-        "name": "Yale Spector"
+        "name": "Activity3",
+        "resourceId": 3
       },
       {
         "id": 4,
-        "name": "Ronen Liberzon"
+        "name": "Activity4",
+        "resourceId": 4
       }
     ]
   }

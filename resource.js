@@ -7,28 +7,33 @@ const apiUrl = "http://localhost:3000";
 
 const typeDefs = gql`
   extend type Query {
-    product(id: ID!): Product
-    products: [Product]
+    resource(id: ID!): Resource
+    resources: [Resource]
   }
 
-  type Product @key(fields: "id"){
+  type Resource @key(fields: "id"){
     id: ID!
-    title: String
+    name: String
   }
 `;
 
 const resolvers = {
   Query: {
-    product(_, { id }) {
-      return fetch(`${apiUrl}/products/${id}`).then(res => res.json());
+    resource(_, { id }) {
+      return fetch(`${apiUrl}/resources/${id}`).then(res => res.json());
     },
-    products() {
-      return fetch(`${apiUrl}/products`).then(res => res.json());
+    resources() {
+      return fetch(`${apiUrl}/resources`).then(res => res.json());
+    }
+  },
+  Resource: {
+    __resolveReference(ref) {
+      return fetch(`${apiUrl}/resources/${ref.id}`).then(res => res.json());
     }
   }
 };
 
-const runProductServer = async ({ port }) => {
+const runResourceServer = async ({ port }) => {
   const server = new ApolloServer({
     schema: buildFederatedSchema([{ typeDefs, resolvers }])
   });
@@ -39,8 +44,8 @@ const runProductServer = async ({ port }) => {
 const runGatewayServer = ({ port }) => {
   const gateway = new ApolloGateway({
     serviceList: [
-      { name: 'product', url: 'http://localhost:4001' },
-      { name: 'user', url: 'http://localhost:4002' }
+      { name: 'resource', url: 'http://localhost:4001' },
+      { name: 'activity', url: 'http://localhost:4002' }
     ]
   });
   
@@ -52,12 +57,12 @@ const runGatewayServer = ({ port }) => {
   return server.listen(port);
 }
 
-runProductServer({ port: 4001 })
+runResourceServer({ port: 4001 })
   .then(({ url }) => {
-    console.log(`Product service ready at ${url}`);
+    console.log(`Resource service ready at ${url}`);
 
     runGatewayServer({ port: 4000 })
-      .then((url) => {
-        console.log(`Gateway service ready at ${url}`);
+      .then(({ url }) => {
+        console.log(`Federation service ready at ${url}`);
       }); 
   });  
