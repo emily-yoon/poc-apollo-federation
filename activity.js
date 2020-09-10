@@ -1,9 +1,8 @@
 const { ApolloServer, gql } = require("apollo-server");
 const { buildFederatedSchema } = require("@apollo/federation");
-const fetch = require("node-fetch");
+const { activities } = require("./data");
 
 const port = 4002;
-const apiUrl = "http://localhost:3000";
 
 const typeDefs = gql`
   extend type Query {
@@ -26,10 +25,10 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     activity(_, { id }) {
-      return fetch(`${apiUrl}/activities/${id}`).then(res => res.json());
+      return activities.find(activity => activity.id === id)
     },
     activities() {
-      return fetch(`${apiUrl}/activities`).then(res => res.json());
+      return activities;
     }
   },
   Activity: {

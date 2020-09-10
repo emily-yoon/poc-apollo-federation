@@ -1,9 +1,6 @@
 const { ApolloServer, gql } = require("apollo-server");
 const { buildFederatedSchema } = require("@apollo/federation");
-const { ApolloGateway } = require("@apollo/gateway");
-const fetch = require("node-fetch");
-
-const apiUrl = "http://localhost:3000";
+const { resources } = require("./data");
 
 const typeDefs = gql`
   extend type Query {
@@ -20,15 +17,15 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     resource(_, { id }) {
-      return fetch(`${apiUrl}/resources/${id}`).then(res => res.json());
+      return resources.find(resource => resource.id === id)
     },
     resources() {
-      return fetch(`${apiUrl}/resources`).then(res => res.json());
+      return resources;
     }
   },
   Resource: {
     __resolveReference(ref) {
-      return fetch(`${apiUrl}/resources/${ref.id}`).then(res => res.json());
+      return resources.find(resource => resource.id === ref.id)
     }
   }
 };
@@ -41,28 +38,4 @@ const runResourceServer = async ({ port }) => {
   return server.listen({ port });  
 }
 
-const runGatewayServer = ({ port }) => {
-  const gateway = new ApolloGateway({
-    serviceList: [
-      { name: 'resource', url: 'http://localhost:4001' },
-      { name: 'activity', url: 'http://localhost:4002' }
-    ]
-  });
-  
-  const server = new ApolloServer({ 
-    gateway,
-    subscriptions: false 
-  });
-  
-  return server.listen(port);
-}
-
-runResourceServer({ port: 4001 })
-  .then(({ url }) => {
-    console.log(`Resource service ready at ${url}`);
-
-    runGatewayServer({ port: 4000 })
-      .then(({ url }) => {
-        console.log(`Federation service ready at ${url}`);
-      }); 
-  });  
+module.exports = { runResourceServer };
