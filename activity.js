@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require("apollo-server");
+const { ApolloServer, gql, ForbiddenError } = require("apollo-server");
 const { buildFederatedSchema } = require("@apollo/federation");
 const { activities } = require("./data");
 
@@ -24,8 +24,14 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    activity(_, { id }) {
-      return activities.find(activity => activity.id === id)
+    activity(_, { id }, { user }) {
+      const activity = activities.find(activity => activity.id === id);
+
+      if(activity.authorId !== user.userId) {
+        throw new ForbiddenError("you are not allowed")
+      }
+
+      return activity;
     },
     activities() {
       return activities;
@@ -40,7 +46,11 @@ const resolvers = {
 };
 
 const server = new ApolloServer({
-  schema: buildFederatedSchema([{ typeDefs, resolvers }])
+  schema: buildFederatedSchema([{ typeDefs, resolvers }]),
+  context: ({ req }) => {
+    const user = req.headers.user ? JSON.parse(req.headers.user) : null;
+    return { user };
+  }
 });
 
 server.listen({ port }).then(({ url }) => {

@@ -7,6 +7,7 @@
     "server": "concurrently -k npm:server:*",
     "server:gateway": "node gateway.js",
     "server:activity": "node activity.js",
+    "server:user": "node user.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -18,6 +19,7 @@
     "apollo-server-express": "^2.17.0",
     "concurrently": "^5.3.0",
     "express": "^4.17.1",
+    "express-jwt": "^6.0.0",
     "graphql": "^15.3.0"
   }
 }
