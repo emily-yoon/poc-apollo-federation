@@ -1,5 +1,6 @@
 # poc-apollo-federation
 
+This is a proof-of-concept project for using [Apollo federation](https://www.apollographql.com/docs/apollo-server/federation/introduction/ ).
 ### Running
 Run `npm i && npm run server` and go to http://localhost:4000/graphql. This is the playground for the federated service. 
 
