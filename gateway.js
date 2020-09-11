@@ -1,9 +1,11 @@
 const { ApolloServer } = require("apollo-server-express");
 const { ApolloGateway, RemoteGraphQLDataSource } = require("@apollo/gateway");
 const express = require("express");
-const { runResourceServer } = require ('./resource.js');
 const expressJwt = require("express-jwt");
+const { runResourceServer } = require ('./services/resource.js');
 
+const gatewayPort = 4000;
+const resourcePort = 4001;
 
 const runGatewayServer = ({ port }) => {
   const app = express();
@@ -47,12 +49,12 @@ const runGatewayServer = ({ port }) => {
   server.applyMiddleware({ app });
   
   app.listen({ port }, () => 
-    console.log(`Federated gateway ready at http://localhost:4000${server.graphqlPath}`)
+    console.log(`Federated gateway ready at http://localhost:${port}${server.graphqlPath}`)
   );
 }
 
-runResourceServer({ port: 4001 })
+runResourceServer({ port: resourcePort })
   .then(({ url }) => {
     console.log(`Resource service ready at ${url}`);
-    runGatewayServer({ port: 4000 });
+    runGatewayServer({ port: gatewayPort });
   });  

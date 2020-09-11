@@ -1,6 +1,6 @@
 const { ApolloServer, gql, ForbiddenError } = require("apollo-server");
 const { buildFederatedSchema } = require("@apollo/federation");
-const { users } = require("./data");
+const { users } = require("../data");
 
 const port = 4003;
 
@@ -10,7 +10,7 @@ const typeDefs = gql`
     users: [User]
   }
 
-  type User {
+  type User @key(fields: "id"){
     id: ID!
     name: String
   }
@@ -23,6 +23,11 @@ const resolvers = {
     },
     users() {
       return users;
+    }
+  },
+  User: {
+    __resolveReference(ref) {
+      return users.find(user => user.id === ref.id)
     }
   }
 };

@@ -1,6 +1,6 @@
 const { ApolloServer, gql } = require("apollo-server");
 const { buildFederatedSchema } = require("@apollo/federation");
-const { resources } = require("./data");
+const { resources } = require("../data");
 
 const typeDefs = gql`
   extend type Query {

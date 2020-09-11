@@ -6,9 +6,8 @@
   "scripts": {
     "server": "concurrently -k npm:server:*",
     "server:gateway": "node gateway.js",
-    "server:activity": "node activity.js",
-    "server:user": "node user.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "server:activity": "node services/activity.js",
+    "server:user": "node services/user.js"
   },
   "author": "",
   "license": "ISC",
